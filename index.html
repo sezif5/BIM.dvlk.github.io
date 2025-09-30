@@ -1,81 +1,176 @@
 <!doctype html>
-<html lang="ru"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Каталог отчётов Navisworks</title>
-<style>
-:root{ --bg:#0b1120; --panel:#0b1225; --muted:#93a2b7; --fg:#e5e7eb; --border:#1f2937; --accent:#F59E0B; --radius:12px; }
-body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.4 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Inter,Helvetica,Arial}
-.bar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--panel);border-bottom:1px solid var(--border)}
-.wrap{max-width:1100px;margin:0 auto;padding:16px;display:grid;grid-template-columns:320px 1fr;gap:16px}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px}
-.pad{padding:14px 16px}.h{margin:0 0 10px;font-size:16px;font-weight:800}.muted{color:var(--muted)}
-.ctrl .row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
-.ctrl input[type="search"], .ctrl select{width:100%;box-sizing:border-box;background:#0f172a;color:var(--fg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;outline:none}
-.btn{background:#0f172a;border:1px solid var(--border);color:var(--fg);padding:9px 12px;border-radius:10px;cursor:pointer}.btn:hover{background:#111827}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
-.card{border:1px solid var(--border);border-radius:12px;background:#0b1225;display:flex;flex-direction:column}
-.card .head{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:10px;align-items:center}
-.code{font:600 12px/1.2 Consolas,Menlo,Monaco,monospace;background:#0f172a;padding:4px 8px;border:1px solid var(--border);border-radius:999px;color:#cbd5e1;white-space:nowrap}
-.title{font-weight:700;word-break:break-word}
-.meta{padding:10px 14px;color:var(--muted);font-size:12px;display:grid;gap:6px}.meta b{color:#cbd5e1}
-.open{padding:12px 14px;border-top:1px solid var(--border);display:flex;gap:8px}
-.empty{opacity:.8;padding:20px;text-align:center;border:1px dashed var(--border);border-radius:12px}
-.footer{max-width:1100px;margin:8px auto 24px;color:#93a2b7;font-size:12px;padding:0 16px}
-.hidden{display:none !important}
-</style></head>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Каталог отчётов Navisworks</title>
+  <!-- GitHub Pages helpers -->
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="color-scheme" content="dark"/>
+  <style>
+  :root{ --bg:#0b1120; --panel:#0b1225; --muted:#93a2b7; --fg:#e5e7eb; --border:#1f2937; --accent:#F59E0B; --radius:12px; }
+  body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.4 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Inter,Helvetica,Arial}
+  .bar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--panel);border-bottom:1px solid var(--border)}
+  .wrap{max-width:1100px;margin:0 auto;padding:16px;display:grid;grid-template-columns:320px 1fr;gap:16px}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:12px}
+  .pad{padding:14px 16px}.h{margin:0 0 10px;font-size:16px;font-weight:800}.muted{color:var(--muted)}
+  .ctrl .row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+  .ctrl select{width:100%;box-sizing:border-box;background:#0f172a;color:var(--fg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;outline:none}
+  .btn{background:#0f172a;border:1px solid var(--border);color:var(--fg);padding:9px 12px;border-radius:10px;cursor:pointer}.btn:hover{background:#111827}
+  .card{border:1px solid var(--border);border-radius:12px;background:#0b1225;display:flex;flex-direction:column}
+  .card .head{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:10px;align-items:center}
+  .code{font:600 12px/1.2 Consolas,Menlo,Monaco,monospace;background:#0f172a;padding:4px 8px;border:1px solid var(--border);border-radius:999px;color:#cbd5e1;white-space:nowrap}
+  .title{font-weight:700;word-break:break-word}
+  .meta{padding:10px 14px;color:var(--muted);font-size:12px;display:grid;gap:6px}.meta b{color:#cbd5e1}
+  .open{padding:12px 14px;border-top:1px solid var(--border);display:flex;gap:8px}
+  .empty{opacity:.8;padding:20px;text-align:center;border:1px dashed var(--border);border-radius:12px}
+  .footer{max-width:1100px;margin:8px auto 24px;color:#93a2b7;font-size:12px;padding:0 16px}
+  .hidden{display:none !important}
+  </style>
+</head>
 <body>
-  <div class="bar"><div class="brand">Каталог отчётов Navisworks</div><div class="tag">Локальный режим</div></div>
+  <div class="bar">
+    <div class="brand">Каталог отчётов Navisworks</div>
+    <div class="tag">GitHub Pages</div>
+  </div>
+
   <div class="wrap">
+    <!-- Left controls -->
     <div class="panel ctrl pad">
       <div class="h">Выбор проекта</div>
-      <div class="row" style="margin-bottom:8px">
-        <input id="q" type="search" placeholder="Поиск по названию или коду…"/>
-        <button class="btn" id="clear">Сброс</button>
-      </div>
       <div class="row" style="margin-bottom:8px">
         <select id="select"></select>
         <button class="btn" id="open">Открыть</button>
       </div>
       <label><input id="openNew" type="checkbox" checked/> Открывать в новой вкладке</label>
       <hr style="border:none;border-top:1px solid var(--border);margin:12px 0">
-      <div class="h" style="margin-bottom:6px">Все отчёты</div>
-      <p class="muted" style="margin-top:0">Дважды кликните по карточке или используйте кнопку «Открыть».</p>
+      <p class="muted" style="margin-top:0">Выберите проект — справа появится карточка отчёта. Нажмите «Открыть».</p>
     </div>
+
+    <!-- Right: single report card -->
     <div class="panel pad">
-      <div id="cards" class="grid"></div>
-      <div id="empty" class="empty hidden">Ничего не найдено</div>
+      <div id="card-holder"></div>
+      <div id="empty" class="empty">Здесь появится карточка выбранного отчёта</div>
     </div>
   </div>
-  <div class="footer">Положите <b>index.html</b> рядом с <code>reports.json</code> и папкой <code>projects/</code>. Запуск: <code>python -m http.server 8000</code>.</div>
+
+  <div class="footer">
+    Положите <b>index.html</b> рядом с <code>reports.json</code> и папкой <code>projects/</code>.
+    Обновление списка на GitHub Pages: просто закоммитьте новый <code>reports.json</code> —
+    страница читает его c анти‑кешем.
+  </div>
+
 <script>
 (function(){
+  // Anti-cache for GitHub Pages (adds ?v=timestamp)
+  var bust = Date.now();
+
+  // Load list
   var REPORTS = [];
-  fetch("reports.json", {cache:"no-store"}).then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(list){ if(Array.isArray(list)) REPORTS = list; init(); }).catch(function(){ init(); });
-  function norm(s){ return (s||"").toLowerCase().replace(/\s+/g," ").trim(); }
+  fetch("reports.json?v="+bust, {cache:"no-store"})
+    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(function(list){ if(Array.isArray(list)) REPORTS = list; init(); })
+    .catch(function(){ init(); });
+
   function init(){
-    var q=document.getElementById("q"), clear=document.getElementById("clear"), sel=document.getElementById("select"), btnOpen=document.getElementById("open"), openNew=document.getElementById("openNew"), cards=document.getElementById("cards"), empty=document.getElementById("empty");
-    function buildOptions(list){ sel.innerHTML=""; list.forEach(function(r){ var o=document.createElement("option"); o.value=r.id; o.textContent=r.title || (r.code?("Проект "+r.code+" "+(r.name||"")):(r.name||r.id)); sel.appendChild(o); }); }
-    function cardTpl(r){
-      var div=document.createElement("div"); div.className="card";
-      div.innerHTML=''
-      +'<div class="head"><div class="title">'+escapeHtml(r.title || (r.code?("Проект "+r.code+" "+(r.name||"")):(r.name||r.id)))+'</div><div class="code">'+escapeHtml(r.code || r.id)+'</div></div>'
-      +'<div class="meta"><div><b>Файл отчёта:</b> <span class="file-name">—</span></div><div><b>Сформировано:</b> <span class="ts">—</span></div></div>'
-      +'<div class="open"><button class="btn btn-open">Открыть</button><a class="btn" target="_blank">Открыть напрямую</a></div>';
-      var a=div.querySelector("a"), btn=div.querySelector(".btn-open"), fn=div.querySelector(".file-name"), ts=div.querySelector(".ts");
-      var url=(r.file||"");
-      a.href=url; a.rel="noopener";
-      function openNow(){ if(openNew.checked) window.open(url,"_blank"); else window.location.href=url; }
-      btn.addEventListener("click", openNow); div.addEventListener("dblclick", openNow);
-      if(r.file){ fetch(url,{cache:"no-store"}).then(function(res){ if(!res.ok) throw 0; return res.text(); }).then(function(html){ var doc=new DOMParser().parseFromString(html,"text/html"); var t=(doc.querySelector(".hero-title")||{}).textContent||""; var tsTxt=(doc.querySelector(".bar .ts")||{}).textContent||""; fn.textContent=t||r.file; ts.textContent=tsTxt||(r.meta&&r.meta.report_ts)||"—"; }).catch(function(){ fn.textContent=r.file||"—"; ts.textContent=(r.meta&&r.meta.report_ts)||"—"; }); }
-      return div;
+    var sel = document.getElementById("select");
+    var btnOpen = document.getElementById("open");
+    var openNew = document.getElementById("openNew");
+    var holder = document.getElementById("card-holder");
+    var empty = document.getElementById("empty");
+
+    // Build options
+    sel.innerHTML = "";
+    REPORTS.forEach(function(r, i){
+      var o = document.createElement("option");
+      o.value = r.id;
+      o.textContent = r.title || (r.code?("Проект "+r.code+" "+(r.name||"")):(r.name||r.id));
+      sel.appendChild(o);
+    });
+
+    function getById(id){ return REPORTS.find(function(x){ return x.id === id; }); }
+    function selectById(id){
+      var r = getById(id) || REPORTS[0];
+      if(!r){ holder.innerHTML=""; empty.classList.remove("hidden"); return; }
+      // set select value if needed
+      if(sel.value !== r.id) sel.value = r.id;
+      renderCard(r);
+      empty.classList.add("hidden");
+      // persist to URL (?id=...)
+      var u = new URL(location.href);
+      u.searchParams.set("id", r.id);
+      history.replaceState(null, "", u.toString());
     }
-    function render(list){ cards.innerHTML=""; if(!list.length){ empty.classList.remove("hidden"); return; } empty.classList.add("hidden"); list.forEach(function(r){ cards.appendChild(cardTpl(r)); }); }
-    function applyFilter(){ var v=norm(q.value); var f=REPORTS.filter(function(r){ var hay=norm([r.id,r.code,r.name,r.title].filter(Boolean).join(" ")); return hay.indexOf(v)!==-1; }); buildOptions(f); render(f); }
-    q.addEventListener("input", function(){ clearTimeout(q._t); q._t=setTimeout(applyFilter,120); });
-    clear.addEventListener("click", function(){ q.value=""; applyFilter(); q.focus(); });
-    btnOpen.addEventListener("click", function(){ var id=sel.value; var r=REPORTS.find(function(x){return x.id===id;}); if(r){ var url=r.file; if(openNew.checked) window.open(url,"_blank"); else window.location.href=url; } });
-    buildOptions(REPORTS); render(REPORTS);
+
+    function toAbs(urlLike){
+      try { return new URL(urlLike, location.href).href; }
+      catch(e){ return urlLike; }
+    }
+
+    function renderCard(r){
+      holder.innerHTML = "";
+      var div = document.createElement("div"); div.className = "card";
+
+      div.innerHTML = ''
+        + '<div class="head"><div class="title">'
+        + escapeHtml(r.title || (r.code?("Проект "+r.code+" "+(r.name||"")):(r.name||r.id)))
+        + '</div><div class="code">'+escapeHtml(r.code || r.id)+'</div></div>'
+        + '<div class="meta">'
+        + '<div><b>Файл отчёта:</b> <span class="file-name">—</span></div>'
+        + '<div><b>Сформировано:</b> <span class="ts">—</span></div>'
+        + '</div>'
+        + '<div class="open">'
+        + '  <button class="btn btn-open">Открыть</button>'
+        + '  <a class="btn" target="_blank" rel="noopener">Открыть напрямую</a>'
+        + '</div>';
+
+      var a = div.querySelector("a");
+      var btn = div.querySelector(".btn-open");
+      var fn = div.querySelector(".file-name");
+      var ts = div.querySelector(".ts");
+      var url = toAbs(r.file || "");
+
+      a.href = url;
+      function openNow(){ if(openNew.checked) window.open(url,"_blank","noopener"); else window.location.href = url; }
+      btn.addEventListener("click", openNow);
+      div.addEventListener("dblclick", openNow);
+
+      // Try to read some meta from the report HTML (title, timestamp)
+      if(r.file){
+        fetch(url + (url.indexOf("?")>=0 ? "&" : "?") + "v=" + bust, {cache:"no-store"})
+          .then(function(res){ if(!res.ok) throw 0; return res.text(); })
+          .then(function(html){
+            var doc = new DOMParser().parseFromString(html, "text/html");
+            var t = (doc.querySelector(".hero-title")||{}).textContent || "";
+            var tsTxt = (doc.querySelector(".bar .ts")||{}).textContent || "";
+            fn.textContent = t || r.file;
+            ts.textContent = tsTxt || (r.meta && r.meta.report_ts) || "—";
+          })
+          .catch(function(){
+            fn.textContent = r.file || "—";
+            ts.textContent = (r.meta && r.meta.report_ts) || "—";
+          });
+      }
+
+      holder.appendChild(div);
+    }
+
+    sel.addEventListener("change", function(){ selectById(sel.value); });
+    btnOpen.addEventListener("click", function(){
+      var r = getById(sel.value); if(!r) return;
+      var url = toAbs(r.file||"");
+      if(openNew.checked) window.open(url,"_blank","noopener"); else window.location.href = url;
+    });
+
+    // Start with ?id=... or first item
+    var urlId = new URL(location.href).searchParams.get("id");
+    selectById(urlId);
   }
-  function escapeHtml(s){ return String(s||"").replace(/[&<>"']/g,function(m){return({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]);}); }
+
+  function escapeHtml(s){ return String(s||"").replace(/[&<>\"']/g,function(m){return({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]);}); }
 })();
 </script>
-</body></html>
+</body>
+</html>
