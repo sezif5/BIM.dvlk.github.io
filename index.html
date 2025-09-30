@@ -59,7 +59,7 @@
   <div class="footer">
     Положите <b>index.html</b> рядом с <code>reports.json</code> и папкой <code>projects/</code>.
     Обновление списка на GitHub Pages: просто закоммитьте новый <code>reports.json</code> —
-    страница читает его c анти‑кешем.
+    страница читает его c анти-кешем.
   </div>
 
 <script>
@@ -123,17 +123,17 @@
         + '</div>'
         + '<div class="open">'
         + '  <button class="btn btn-open">Открыть</button>'
-        + '  <a class="btn" target="_blank" rel="noopener">Открыть напрямую</a>'
         + '</div>';
 
-      var a = div.querySelector("a");
       var btn = div.querySelector(".btn-open");
       var fn = div.querySelector(".file-name");
       var ts = div.querySelector(".ts");
       var url = toAbs(r.file || "");
 
-      a.href = url;
-      function openNow(){ if(openNew.checked) window.open(url,"_blank","noopener"); else window.location.href = url; }
+      function openNow(){
+        if(openNew.checked) window.open(url,"_blank","noopener");
+        else window.location.href = url;
+      }
       btn.addEventListener("click", openNow);
       div.addEventListener("dblclick", openNow);
 
