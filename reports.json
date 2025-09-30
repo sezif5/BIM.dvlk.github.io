@@ -1,10 +1,46 @@
 [
   {
+    "id": "0000_Test",
+    "code": "0000",
+    "name": "Test",
+    "title": "Проект 0000 Test",
+    "file": "projects/0000_Test/Test_report.html",
+    "meta": {
+      "report_title": "Test_report.html",
+      "report_ts": ""
+    }
+  },
+  {
+    "id": "0004",
+    "code": "0004",
+    "name": "0004",
+    "title": "Проект 0004 0004",
+    "file": "projects/0004/0004_ИВАК_СПИС_report.html",
+    "meta": {
+      "report_title": "0004_ИВАК_СПИС_report.html",
+      "report_ts": "Сформировано: 2025-09-29 10:08"
+    }
+  },
+  {
     "id": "0005_MFK",
     "code": "0005",
-    "name": "МФК",
-    "title": "Проект 0005 МФК",
-    "file": "projects/0005_MFK/0005_DVLK_report.html"
+    "name": "MFK",
+    "title": "Проект 0005 MFK",
+    "file": "projects/0005_MFK/0005_DVLK_report.html",
+    "meta": {
+      "report_title": "0005_МФК_DVLK.xml",
+      "report_ts": "Сформировано: 2025-09-29 22:36"
+    }
+  },
+  {
+    "id": "0005_MFK",
+    "code": "0005",
+    "name": "MFK",
+    "title": "Проект 0005 MFK",
+    "file": "projects/0005_MFK/0005__DVLK_report v2.html",
+    "meta": {
+      "report_title": "0005_МФК_DVLK.xml",
+      "report_ts": "Сформировано: 2025-09-29 11:54"
+    }
   }
 ]
-
