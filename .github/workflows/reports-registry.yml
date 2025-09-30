@@ -1,0 +1,64 @@
+name: Rebuild reports.json
+
+on:
+  push:
+    paths:
+      - 'projects/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: reports-registry
+  cancel-in-progress: true
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Ensure updater script (use repo version if present)
+        shell: bash
+        run: |
+          if [[ -f update_reports.py ]]; then
+            echo "Using existing update_reports.py"
+          else
+            cat > update_reports.py <<'PY'
+import os, re, json, sys
+from io import open as _open
+def _read(p):
+    for enc in ("utf-8","cp1251"):
+        try:
+            return _open(p,"r",encoding=enc,errors="ignore").read()
+        except: pass
+    return open(p,"rb").read().decode("utf-8","ignore")
+def _meta(html):
+    title = None; ts = None
+    m = re.search(r'<[^>]*class=["\']hero-title["\'][^>]*>(.*?)</[^>]+>', html, re.I|re.S)
+    if m: title = re.sub(r'<[^>]+>','',m.group(1)).strip()
+    if not title:
+        m = re.search(r'<title[^>]*>(.*?)</title>', html, re.I|re.S)
+        if m: title = re.sub(r'\s+',' ',m.group(1)).strip()
+    m = re.search(r'<[^>]*class=["\'][^"\']*ts[^"\']*["\'][^>]*>(.*?)</[^>]+>', html, re.I|re.S)
+    if m: ts = re.sub(r'<[^>]+>','',m.group(1)).strip()
+    return title, ts
+def _slug(s):
+    s = s.strip().lower().replace(' ','-').replace('\\','-').replace('/','-')
+    s = re.sub(r'[^a-z0-9._-]+','-',s); s = re.sub(r'-{2,}','-',s).strip('-')
+    return s or "project"
+root = os.getcwd()
+proj = os.path.join(root,"projects")
+items = []
+for dp, dn, fn in os.walk(proj) if os.path.isdir(proj) else []:
+    for f in fn:
+        if
