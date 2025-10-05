@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IFC Viewer — That Open Engine</title>
+  <style>
+    html,body{height:100%; margin:0}
+    body{background:#0b1120; color:#e5e7eb; font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;}
+    #container{position:absolute; inset:0}
+    #ui{position:fixed; left:12px; top:12px; display:flex; gap:8px; align-items:center; z-index:10}
+    .chip{background:#0f172a; border:1px solid #1f2937; border-radius:12px; padding:6px 10px}
+    .btn{appearance:none; border:1px solid #1f2937; border-radius:14px; padding:8px 12px; background:#0f172a; color:#e5e7eb; cursor:pointer; font-weight:600}
+    .btn:hover{background:#111827}
+    .btn.primary{background:#F59E0B; color:#111; border:1px solid #F59E0B}
+    .btn.primary:hover{filter:brightness(0.95)}
+    #drop{position:absolute; inset:0; display:none; align-items:center; justify-content:center; border:2px dashed #374151; color:#cbd5e1; pointer-events:none}
+    #loading{position:fixed; right:12px; top:12px; background:#0f172a; border:1px solid #1f2937; border-radius:12px; padding:8px 10px; display:none}
+    a.back{color:#cbd5e1; text-decoration:none; border-bottom:1px dashed rgba(255,255,255,.5)}
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <div id="ui">
+    <a href="index.html" class="chip back">← Назад</a>
+    <span id="source" class="chip">Источник: —</span>
+    <label class="btn" for="picker">Загрузить IFC</label>
+    <input id="picker" type="file" accept=".ifc" style="display:none" />
+    <button class="btn primary" id="fit">Авто-кадр</button>
+  </div>
+  <div id="drop">Перетащите .ifc сюда</div>
+  <div id="loading">Загрузка: <span id="p">0</span>%</div>
+
+  <script type="module">
+    import * as OBC from "https://cdn.jsdelivr.net/npm/@thatopen/components@3.1.4/dist/index.min.mjs";
+
+    const container = document.getElementById('container');
+    const drop = document.getElementById('drop');
+    const loading = document.getElementById('loading');
+    const p = document.getElementById('p');
+    const sourceLbl = document.getElementById('source');
+    const picker = document.getElementById('picker');
+    const fit = document.getElementById('fit');
+
+    // 1) Создаём мир
+    const components = new OBC.Components();
+    const worlds = components.get(OBC.Worlds);
+    const world = worlds.create();
+    world.scene = new OBC.SimpleScene(components);
+    world.scene.setup();
+    world.scene.three.background = null;
+    world.renderer = new OBC.SimpleRenderer(components, container);
+    world.camera = new OBC.OrthoPerspectiveCamera(components);
+    await world.camera.controls.setLookAt(15, 10, 15, 0, 0, 0);
+    components.init();
+    components.get(OBC.Grids).create(world);
+
+    // 2) Настраиваем загрузчик IFC
+    const ifcLoader = components.get(OBC.IfcLoader);
+    await ifcLoader.setup({
+      autoSetWasm: false,
+      wasm: { path: "https://unpkg.com/web-ifc@0.0.69/", absolute: true }
+    });
+
+    // 3) Настраиваем FragmentsManager (worker)
+    const fragments = components.get(OBC.FragmentsManager);
+    const workerURL = "https://thatopen.github.io/engine_fragment/resources/worker.mjs";
+    const wBlob = await (await fetch(workerURL)).blob();
+    const wFile = new File([wBlob], "worker.mjs", { type: "text/javascript" });
+    const wObjUrl = URL.createObjectURL(wFile);
+    fragments.init(wObjUrl);
+    world.camera.controls.addEventListener("rest", () => fragments.core.update(true));
+    fragments.list.onItemSet.add(({ value: model }) => {
+      model.useCamera(world.camera.three);
+      world.scene.three.add(model.object);
+      fragments.core.update(true);
+    });
+
+    function showLoading(v){ loading.style.display = v ? "block" : "none"; }
+    function setProgress(val){ p.textContent = String(Math.round(val*100)); }
+    async function loadIfcFromArrayBuffer(buffer, name="model"){
+      showLoading(true); setProgress(0);
+      await ifcLoader.load(new Uint8Array(buffer), false, name, {
+        processData: { progressCallback: (pr) => setProgress(pr) }
+      }).catch(err => { alert("Ошибка загрузки IFC: "+ err); console.error(err); });
+      showLoading(false);
+    }
+
+    async function loadIfcFromUrl(url){
+      sourceLbl.textContent = "Источник: " + url;
+      const res = await fetch(url);
+      const ab = await res.arrayBuffer();
+      await loadIfcFromArrayBuffer(ab, url.split('/').pop() || "model");
+    }
+
+    async function loadIfcFromFile(file){
+      sourceLbl.textContent = "Источник: локальный — " + file.name;
+      const ab = await file.arrayBuffer();
+      await loadIfcFromArrayBuffer(ab, file.name);
+    }
+
+    // 4) Query params: ?ifc=... (URL) или ?local=key (sessionStorage blob)
+    const params = new URLSearchParams(location.search);
+    const ifc = params.get('ifc');
+    const localKey = params.get('local');
+    if (localKey){
+      try{
+        const meta = JSON.parse(sessionStorage.getItem(localKey) || "{}");
+        if (meta && meta.url){
+          sourceLbl.textContent = "Источник: локальный — " + (meta.name || "model.ifc");
+          const res = await fetch(meta.url);
+          const ab = await res.arrayBuffer();
+          await loadIfcFromArrayBuffer(ab, meta.name || "model");
+        }
+      }catch(e){ console.warn(e); }
+    } else if (ifc){
+      await loadIfcFromUrl(ifc);
+    } else {
+      sourceLbl.textContent = "Источник: — выберите файл";
+    }
+
+    // 5) File input
+    picker.addEventListener('change', async () => {
+      const f = picker.files && picker.files[0]; if (f) await loadIfcFromFile(f);
+    });
+
+    // 6) Drag & drop
+    window.addEventListener('dragover', (e) => { e.preventDefault(); drop.style.display="flex"; });
+    window.addEventListener('dragleave', (e) => { e.preventDefault(); drop.style.display="none"; });
+    window.addEventListener('drop', async (e) => {
+      e.preventDefault(); drop.style.display="none";
+      const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (f && f.name.toLowerCase().endsWith('.ifc')) await loadIfcFromFile(f);
+    });
+
+    // 7) Resize + fit
+    window.addEventListener('resize', () => world.renderer.resize());
+    fit.addEventListener('click', () => world.camera.controls.fitToBox(world.scene.three, true));
+  </script>
+</body>
+</html>

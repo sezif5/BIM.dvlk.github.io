@@ -1,174 +1,98 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Каталог отчётов Navisworks</title>
-  <!-- GitHub Pages helpers -->
-  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <meta name="color-scheme" content="dark"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Отчёты проекта — Просмотр IFC</title>
   <style>
-  :root{ --bg:#0b1120; --panel:#0b1225; --muted:#93a2b7; --fg:#e5e7eb; --border:#1f2937; --accent:#F59E0B; --radius:12px; }
-  body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.4 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Inter,Helvetica,Arial}
-  .bar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--panel);border-bottom:1px solid var(--border)}
-  .wrap{max-width:1100px;margin:0 auto;padding:16px;display:grid;grid-template-columns:320px 1fr;gap:16px}
-  .panel{background:var(--panel);border:1px solid var(--border);border-radius:12px}
-  .pad{padding:14px 16px}.h{margin:0 0 10px;font-size:16px;font-weight:800}.muted{color:var(--muted)}
-  .ctrl .row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
-  .ctrl select{width:100%;box-sizing:border-box;background:#0f172a;color:var(--fg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;outline:none}
-  .btn{background:#0f172a;border:1px solid var(--border);color:var(--fg);padding:9px 12px;border-radius:10px;cursor:pointer}.btn:hover{background:#111827}
-  .card{border:1px solid var(--border);border-radius:12px;background:#0b1225;display:flex;flex-direction:column}
-  .card .head{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:10px;align-items:center}
-  .code{font:600 12px/1.2 Consolas,Menlo,Monaco,monospace;background:#0f172a;padding:4px 8px;border:1px solid var(--border);border-radius:999px;color:#cbd5e1;white-space:nowrap}
-  .title{font-weight:700;word-break:break-word}
-  .meta{padding:10px 14px;color:var(--muted);font-size:12px;display:grid;gap:6px}.meta b{color:#cbd5e1}
-  .open{padding:12px 14px;border-top:1px solid var(--border);display:flex;gap:8px}
-  .empty{opacity:.8;padding:20px;text-align:center;border:1px dashed var(--border);border-radius:12px}
-  .footer{max-width:1100px;margin:8px auto 24px;color:#93a2b7;font-size:12px;padding:0 16px}
-  .hidden{display:none !important}
+    :root{
+      --bg:#ffffff; --fg:#222222; --accent:#F7921E; --gray:#d9d9d9;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; color:var(--fg); background:var(--bg);}
+    header{background:#f5f5f5; border-bottom:1px solid #dcdcdc; padding:12px 16px; display:flex; align-items:center; gap:12px;}
+    header h1{font-size:16px; margin:0;}
+    main{max-width:960px; margin:24px auto; padding:0 16px;}
+    .card{border:1px solid #dcdcdc; border-radius:12px; padding:16px; margin:12px 0;}
+    .row{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+    .row input[type="text"]{flex:1 1 420px; padding:10px 12px; border:1px solid #dcdcdc; border-radius:8px;}
+    .btn{appearance:none; border:none; border-radius:14px; padding:10px 14px; background:var(--accent); color:#fff; cursor:pointer; font-weight:600}
+    .btn:disabled{opacity:.5; cursor:not-allowed}
+    .link{color:var(--accent); text-decoration:none; border-bottom:1px dashed var(--accent)}
+    .muted{color:#666}
+    .grid{display:grid; grid-template-columns:auto 1fr auto; gap:8px 12px; align-items:center}
+    .grid h3{grid-column:1/-1; margin:8px 0}
+    .hint{font-size:12px; color:#666}
+    .file{display:inline-block; padding:6px 10px; border:1px solid #dcdcdc; border-radius:8px; white-space:nowrap}
+    .hr{height:1px; background:#eee; margin:12px 0}
   </style>
 </head>
 <body>
-  <div class="bar">
-    <div class="brand">Каталог отчётов Navisworks</div>
-    <div class="tag">GitHub Pages</div>
-  </div>
+  <header>
+    <h1>Отчёты по проекту</h1>
+  </header>
+  <main>
+    <section class="card">
+      <div class="grid">
+        <h3>Открыть IFC-модель</h3>
+        <div class="muted" style="grid-column:1/-1">Два способа: выберите локальный файл или укажите путь к файлу в каталоге отчётов.</div>
 
-  <div class="wrap">
-    <!-- Left controls -->
-    <div class="panel ctrl pad">
-      <div class="h">Выбор проекта</div>
-      <div class="row" style="margin-bottom:8px">
-        <select id="select"></select>
-        <button class="btn" id="open">Открыть</button>
+        <label>Локальный файл .ifc</label>
+        <div class="row">
+          <input id="ifc-file" type="file" accept=".ifc" />
+          <button class="btn" id="open-local" disabled>Открыть</button>
+        </div>
+
+        <div class="hr" style="grid-column:1/-1"></div>
+
+        <label>Путь в проектной папке</label>
+        <div class="row">
+          <input id="ifc-path" type="text" placeholder="Например: projects/0005/models/model.ifc" />
+          <button class="btn" id="open-url">Открыть</button>
+        </div>
+        <div class="hint" style="grid-column:1/-1">
+          Пример: <span class="file">projects/0005/ifc/arch.ifc</span>. Файл должен быть доступен по тому же домену (CORS).
+        </div>
       </div>
-      <label><input id="openNew" type="checkbox" checked/> Открывать в новой вкладке</label>
-      <hr style="border:none;border-top:1px solid var(--border);margin:12px 0">
-      <p class="muted" style="margin-top:0">Выберите проект — справа появится карточка отчёта. Нажмите «Открыть».</p>
-    </div>
+    </section>
 
-    <!-- Right: single report card -->
-    <div class="panel pad">
-      <div id="card-holder"></div>
-      <div id="empty" class="empty">Здесь появится карточка выбранного отчёта</div>
-    </div>
-  </div>
+    <section class="card">
+      <h3>Пример ссылки из карточки проекта</h3>
+      <p class="muted">Если у вас уже есть известный путь к IFC, можно добавить кнопку «Открыть модель» прямо в карточку проекта:</p>
+      <p>
+        <a class="link" href="./viewer.html?ifc=projects/0005/ifc/example.ifc">Открыть модель проекта 0005</a>
+      </p>
+    </section>
+  </main>
 
-  <div class="footer">
-    тестовый вариант страницы
-  </div>
+  <script>
+    const $file = document.getElementById('ifc-file');
+    const $openLocal = document.getElementById('open-local');
+    const $path = document.getElementById('ifc-path');
+    const $openUrl = document.getElementById('open-url');
 
-<script>
-(function(){
-  // Anti-cache for GitHub Pages (adds ?v=timestamp)
-  var bust = Date.now();
-
-  // Load list
-  var REPORTS = [];
-  fetch("reports.json?v="+bust, {cache:"no-store"})
-    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
-    .then(function(list){ if(Array.isArray(list)) REPORTS = list; init(); })
-    .catch(function(){ init(); });
-
-  function init(){
-    var sel = document.getElementById("select");
-    var btnOpen = document.getElementById("open");
-    var openNew = document.getElementById("openNew");
-    var holder = document.getElementById("card-holder");
-    var empty = document.getElementById("empty");
-
-    // Build options
-    sel.innerHTML = "";
-    REPORTS.forEach(function(r, i){
-      var o = document.createElement("option");
-      o.value = r.id;
-      o.textContent = r.title || (r.code?("Проект "+r.code+" "+(r.name||"")):(r.name||r.id));
-      sel.appendChild(o);
+    $file.addEventListener('change', () => {
+      $openLocal.disabled = !$file.files.length;
     });
 
-    function getById(id){ return REPORTS.find(function(x){ return x.id === id; }); }
-    function selectById(id){
-      var r = getById(id) || REPORTS[0];
-      if(!r){ holder.innerHTML=""; empty.classList.remove("hidden"); return; }
-      // set select value if needed
-      if(sel.value !== r.id) sel.value = r.id;
-      renderCard(r);
-      empty.classList.add("hidden");
-      // persist to URL (?id=...)
-      var u = new URL(location.href);
-      u.searchParams.set("id", r.id);
-      history.replaceState(null, "", u.toString());
-    }
-
-    function toAbs(urlLike){
-      try { return new URL(urlLike, location.href).href; }
-      catch(e){ return urlLike; }
-    }
-
-    function renderCard(r){
-      holder.innerHTML = "";
-      var div = document.createElement("div"); div.className = "card";
-
-      div.innerHTML = ''
-        + '<div class="head"><div class="title">'
-        + escapeHtml(r.title || (r.code?("Проект "+r.code+" "+(r.name||"")):(r.name||r.id)))
-        + '</div><div class="code">'+escapeHtml(r.code || r.id)+'</div></div>'
-        + '<div class="meta">'
-        + '<div><b>Файл отчёта:</b> <span class="file-name">—</span></div>'
-        + '<div><b>Сформировано:</b> <span class="ts">—</span></div>'
-        + '</div>'
-        + '<div class="open">'
-        + '  <button class="btn btn-open">Открыть</button>'
-        + '</div>';
-
-      var btn = div.querySelector(".btn-open");
-      var fn = div.querySelector(".file-name");
-      var ts = div.querySelector(".ts");
-      var url = toAbs(r.file || "");
-
-      function openNow(){
-        if(openNew.checked) window.open(url,"_blank","noopener");
-        else window.location.href = url;
-      }
-      btn.addEventListener("click", openNow);
-      div.addEventListener("dblclick", openNow);
-
-      // Try to read some meta from the report HTML (title, timestamp)
-      if(r.file){
-        fetch(url + (url.indexOf("?")>=0 ? "&" : "?") + "v=" + bust, {cache:"no-store"})
-          .then(function(res){ if(!res.ok) throw 0; return res.text(); })
-          .then(function(html){
-            var doc = new DOMParser().parseFromString(html, "text/html");
-            var t = (doc.querySelector(".hero-title")||{}).textContent || "";
-            var tsTxt = (doc.querySelector(".bar .ts")||{}).textContent || "";
-            fn.textContent = t || r.file;
-            ts.textContent = tsTxt || (r.meta && r.meta.report_ts) || "—";
-          })
-          .catch(function(){
-            fn.textContent = r.file || "—";
-            ts.textContent = (r.meta && r.meta.report_ts) || "—";
-          });
-      }
-
-      holder.appendChild(div);
-    }
-
-    sel.addEventListener("change", function(){ selectById(sel.value); });
-    btnOpen.addEventListener("click", function(){
-      var r = getById(sel.value); if(!r) return;
-      var url = toAbs(r.file||"");
-      if(openNew.checked) window.open(url,"_blank","noopener"); else window.location.href = url;
+    // Открыть локальный файл: передаём через sessionStorage (без сервера)
+    $openLocal.addEventListener('click', async () => {
+      const f = $file.files && $file.files[0];
+      if (!f) return;
+      const key = 'ifc-local-' + Date.now();
+      // сохраняем blob в sessionStorage (как object URL)
+      const url = URL.createObjectURL(f);
+      sessionStorage.setItem(key, JSON.stringify({ name: f.name, url }));
+      // передаём ключ через query
+      location.href = 'viewer.html?local=' + encodeURIComponent(key);
     });
 
-    // Start with ?id=... or first item
-    var urlId = new URL(location.href).searchParams.get("id");
-    selectById(urlId);
-  }
-
-  function escapeHtml(s){ return String(s||"").replace(/[&<>\"']/g,function(m){return({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]);}); }
-})();
-</script>
+    // Открыть по относительному пути (из папки проекта)
+    $openUrl.addEventListener('click', () => {
+      const v = ($path.value || '').trim();
+      if (!v) { alert('Укажите путь к .ifc'); return; }
+      location.href = 'viewer.html?ifc=' + encodeURIComponent(v);
+    });
+  </script>
 </body>
 </html>
