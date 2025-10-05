@@ -27,6 +27,7 @@
     "name": "MFK",
     "title": "Проект 0005 MFK",
     "file": "projects/0005_MFK/0005_DVLK_report.html",
+    "ifc": "projects/0005/ifc/model.ifc",
     "meta": {
       "report_title": "0005_МФК_DVLK.xml",
       "report_ts": "Сформировано: 2025-09-29 22:36"
